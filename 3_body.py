@@ -12,10 +12,10 @@ dirName='plots'
 
 try:
     os.mkdir(dirName)
-    print("Directory: ", dirName, " is created")
+    print("Directory: [",dirName,"] is created")
 
 except FileExistsError:
-    print("Directory: ", dirName, " already exists")
+    print("Directory: [",dirName,"] exists")
     pass
 
 
@@ -45,4 +45,8 @@ sol = odeint(dSdt, y0=[x1_0, y1_0, x2_0,y2_0, vx1_0, vy1_0, vx2_0, vy2_0],t=t)
 
 plt.plot(sol.T[0])
 plt.xlim(0,200)
+plt.ylabel("Distance of Earth from the sun (AU)")
+plt.xlabel("Years")
+plt.title("Earth distance from the Sun against time.")
 plt.grid()
+# plt.savefig("/Users/daryltng/Documents/GitHub/3-body-problem/plots/Earth_from_sun.png")
