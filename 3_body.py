@@ -19,7 +19,7 @@ class Orbit:
     def __init__(self):
           
         #Actual quantities
-        self.Earth_actuall_mass = 5.97e24
+        self.Earth_actual_mass = 5.97e24
         self.Astronomical_unit = 1.5e11
         self.Universal_grav_constant = 6.67e-11
 
@@ -33,6 +33,12 @@ class Orbit:
         self.Sun_init_pos_x = 0
         self.Sun_init_pos_y = 0
 
+        #Variables for position
+        self.Planet_pos_x = None
+        self.Planet_pos_y = None
+        self.Sun_pos_x = None
+        self.Sun_pos_y = None
+
         #Initial Velocities
         self.Planet_init_vel_x = 0.3
         self.Planet_init_vel_y = np.sqrt(self.Sun_mass)
@@ -41,7 +47,6 @@ class Orbit:
 
         #time granularity of simulation
         self.time = np.linspace(0,1,10000)
-
 
     def dSdt(self, S, t):
         planet_x, planet_y, Sun_x, Sun_y, planet_vx, planet_vy,Sun_vx, Sun_vy = S
@@ -54,10 +59,12 @@ class Orbit:
         self.Sun_mass/planet_Sun_dist**3 * (planet_y - Sun_y)]
 
     def solve_ODE(self):
-          sol = odeint(self.dSdt, y0=[self.Planet_init_pos_x, self.Planet_init_pos_y,
-          self.Sun_init_pos_x, self.Sun_init_pos_y,
-          self.Planet_init_vel_x, self.Planet_init_vel_y,
-          self.Sun_init_vel_x, self.Sun_init_vel_y],
+          sol = odeint(self.dSdt, y0=[
+                self.Planet_init_pos_x, self.Planet_init_pos_y,
+                self.Sun_init_pos_x, self.Sun_init_pos_y,
+                self.Planet_init_vel_x, self.Planet_init_vel_y,
+                self.Sun_init_vel_x, self.Sun_init_vel_y
+                ],
           t = self.time)
 
           return sol
@@ -78,21 +85,21 @@ class Orbit:
 
     def plot_orbit(self):
           
-          tt = 1/np.sqrt(6.67e-11 * 5.97e24 / (1.5e11)**3 ) #obtain number of seconds
-          tt = tt / (60*60 * 24* 365.25) * np.diff(self.time)[0] #convert seconds into years
+          time = 1/np.sqrt(self.Universal_grav_constant * self.Earth_actual_mass / (self.Astronomical_unit)**3) #obtain number of seconds
+          time = time / (60*60 * 24* 365.25) * np.diff(self.time)[0] #convert seconds into years
 
-          self.Planet_init_pos_x = self.solve_ODE().T[0]
-          self.Planet_init_pos_y = self.solve_ODE().T[1]
-          self.Sun_init_pos_x = self.solve_ODE().T[2]
-          self.Sun_init_pos_y = self.solve_ODE().T[3]
+          self.Planet_pos_x = self.solve_ODE().T[0]
+          self.Planet_pos_y = self.solve_ODE().T[1]
+          self.Sun_pos_x = self.solve_ODE().T[2]
+          self.Sun_pos_y = self.solve_ODE().T[3]
 
           def animate(i):
-                ln1.set_data([self.Planet_init_pos_x[i],
-                self.Planet_init_pos_y[i],
-                self.Sun_init_pos_x[i],
-                self.Sun_init_pos_y[i]])
+                ln1.set_data(
+                      [self.Planet_pos_x[i], self.Sun_pos_x[i]], 
+                      [self.Planet_pos_y[i], self.Sun_pos_y[i]]
+                )
 
-                text.set_text('Time = {:.2f} Years', format(i*tt))
+                text.set_text('Time = {:.2f} Years', format(i*time))
 
           fig, ax = plt.subplots(1, 1, figsize=(8,8))
           ax.grid()
@@ -100,7 +107,7 @@ class Orbit:
           text = plt.text(0.7, 0.7, '')
           ax.set_ylim(-5, 5)
           ax.set_xlim(-5, 5)
-          ani = animation.FuncAnimation(fig, animate(), frames=200, interval=50)
+          ani = animation.FuncAnimation(fig, animate, frames=200, interval=50)
           ani.save("orbit_trajectory.gif", writer="pillow", fps=30)
 
 
