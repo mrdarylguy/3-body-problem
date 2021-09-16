@@ -17,18 +17,24 @@ def plots(filepath):
 
 class Orbit:
     def __init__(self):
+          
+        #Actual quantities
+        self.Earth_actuall_mass = 5.97e24
+        self.Astronomical_unit = 1.5e11
+        self.Universal_grav_constant = 6.67e-11
+
         #Relative Mass
         self.Planet_mass = 1 #Default is one Earth mass
         self.Sun_mass = 333000 
 
-        #Initial Position
+        #Initial Positions
         self.Planet_init_pos_x = 1
-        self.Planet_init_pos_y = 0
+        self.Planet_init_pos_y = 0.4
         self.Sun_init_pos_x = 0
         self.Sun_init_pos_y = 0
 
         #Initial Velocities
-        self.Planet_init_vel_x = 0
+        self.Planet_init_vel_x = 0.3
         self.Planet_init_vel_y = np.sqrt(self.Sun_mass)
         self.Sun_init_vel_x = 0
         self.Sun_init_vel_y = 0
@@ -36,7 +42,6 @@ class Orbit:
         #time granularity of simulation
         self.time = np.linspace(0,1,10000)
 
-        #solution array
 
     def dSdt(self, S, t):
         planet_x, planet_y, Sun_x, Sun_y, planet_vx, planet_vy,Sun_vx, Sun_vy = S
@@ -57,18 +62,52 @@ class Orbit:
 
           return sol
 
-    def plot_trajectory(self):
+    def plot_radius(self):
 
           plt.plot(self.solve_ODE().T[0])
-          plt.xlim(0,200)
-          plt.ylabel("Distance of Planets from the Sun (AU)")
-          plt.xlabel("Years")
-          plt.title("Planetary distance from the Sun against time.")
+          plt.xlim(0, 200)
+          plt.ylim(0.2, 1.1)
+          plt.ylabel("Orbital Radius/Aphelion", fontsize=14)
+          plt.xlabel("Units of time", fontsize=14)
+          plt.title("Orbital radius against time", fontsize=16)
+          plt.axhline(y=1.0, color="red", linestyle='--')
+          plt.axhline(y=min(self.solve_ODE().T[0]), color='red', linestyle="--") 
           plt.grid()
           plt.show()
           # plt.savefig(".......")
 
+    def plot_orbit(self):
+          
+          tt = 1/np.sqrt(6.67e-11 * 5.97e24 / (1.5e11)**3 ) #obtain number of seconds
+          tt = tt / (60*60 * 24* 365.25) * np.diff(self.time)[0] #convert seconds into years
+
+          self.Planet_init_pos_x = self.solve_ODE().T[0]
+          self.Planet_init_pos_y = self.solve_ODE().T[1]
+          self.Sun_init_pos_x = self.solve_ODE().T[2]
+          self.Sun_init_pos_y = self.solve_ODE().T[3]
+
+          def animate(i):
+                ln1.set_data([self.Planet_init_pos_x[i],
+                self.Planet_init_pos_y[i],
+                self.Sun_init_pos_x[i],
+                self.Sun_init_pos_y[i]])
+
+                text.set_text('Time = {:.2f} Years', format(i*tt))
+
+          fig, ax = plt.subplots(1, 1, figsize=(8,8))
+          ax.grid()
+          ln1, = plt.plot([],[], "ro--", lw=3, markersize=8)
+          text = plt.text(0.7, 0.7, '')
+          ax.set_ylim(-5, 5)
+          ax.set_xlim(-5, 5)
+          ani = animation.FuncAnimation(fig, animate(), frames=200, interval=50)
+          ani.save("orbit_trajectory.gif", writer="pillow", fps=30)
+
+
+          pass
+
 if __name__ == '__main__':
       orbit = Orbit()
       orbit.solve_ODE()
-      orbit.plot_trajectory()
+      orbit.plot_orbit()
+      # orbit.plot_radius()
