@@ -19,8 +19,8 @@ class Orbit:
         self.Sun_mass = 333000 
 
         #Initial Positions
-        self.Planet_init_pos_x = 1
-        self.Planet_init_pos_y = 0.4
+        self.Planet_init_pos_x = 1 #Default is one Astronomical Unit
+        self.Planet_init_pos_y = 0
         self.Sun_init_pos_x = 0
         self.Sun_init_pos_y = 0
 
@@ -31,7 +31,7 @@ class Orbit:
         self.Sun_pos_y = None
 
         #Initial Velocities
-        self.Planet_init_vel_x = 0.3
+        self.Planet_init_vel_x = 0
         self.Planet_init_vel_y = np.sqrt(self.Sun_mass)
         self.Sun_init_vel_x = 0
         self.Sun_init_vel_y = 0
@@ -46,8 +46,8 @@ class Orbit:
         return [planet_vx, planet_vy,Sun_vx, Sun_vy,
         self.Sun_mass/planet_Sun_dist**3 * (Sun_x - planet_x),
         self.Sun_mass/planet_Sun_dist**3 * (Sun_y - planet_y),
-        self.Sun_mass/planet_Sun_dist**3 * (planet_x - Sun_x),
-        self.Sun_mass/planet_Sun_dist**3 * (planet_y - Sun_y)]
+        self.Planet_mass/planet_Sun_dist**3 * (planet_x - Sun_x),
+        self.Planet_mass/planet_Sun_dist**3 * (planet_y - Sun_y)]
 
     def solve_ODE(self):
           sol = odeint(self.dSdt, y0=[
@@ -77,8 +77,9 @@ class Orbit:
     def plot_orbit(self):
           
           time = 1/np.sqrt(self.Universal_grav_constant * self.Earth_actual_mass / (self.Astronomical_unit)**3) #obtain number of seconds
-          time = time / (60*60 * 24* 365.25) * np.diff(self.time)[0] #convert seconds into years
+          time = time / (60*60*24*365.25) * np.diff(self.time)[0] #convert seconds into years
 
+          #Array of positions
           self.Planet_pos_x = self.solve_ODE().T[0]
           self.Planet_pos_y = self.solve_ODE().T[1]
           self.Sun_pos_x = self.solve_ODE().T[2]
@@ -101,13 +102,14 @@ class Orbit:
           ani = animation.FuncAnimation(fig, animate, frames=200, interval=50)
           ani.save("orbit_trajectory.gif", writer="pillow", fps=30)
           plt.show()
+      #     plt.savefig("..........")
 
     #temp folder to store plots
     def plot_folder(self, filepath):
           try:
                 os.mkdir(filepath)
                 print("Directory is created")
-                
+
           except FileExistsError:
                 print("Directory exists")
                 pass
@@ -115,7 +117,8 @@ class Orbit:
 
 if __name__ == '__main__':
       orbit = Orbit()
-      orbit.plot_folder("...........")
+      # orbit.plot_folder("...........")
       orbit.solve_ODE()
-      orbit.plot_orbit()
       # orbit.plot_radius()
+      orbit.plot_orbit()
+      
