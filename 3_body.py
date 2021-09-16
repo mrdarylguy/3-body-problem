@@ -55,7 +55,11 @@ class Orbit:
           self.Sun_init_vel_x, self.Sun_init_vel_y],
           t = self.time)
 
-          plt.plot(sol.T[0])
+          return sol
+
+    def plot_trajectory(self):
+
+          plt.plot(self.solve_ODE().T[0])
           plt.xlim(0,200)
           plt.ylabel("Distance of Planets from the Sun (AU)")
           plt.xlabel("Years")
@@ -67,3 +71,4 @@ class Orbit:
 if __name__ == '__main__':
       orbit = Orbit()
       orbit.solve_ODE()
+      orbit.plot_trajectory()
