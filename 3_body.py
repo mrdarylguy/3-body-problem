@@ -1,52 +1,72 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import odeint
-from scipy.integrate import solve_ivp
 from matplotlib import animation
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.animation import PillowWriter
 import os
 
 #temp folder to store plots
-dirName='plots'
+def plots(filepath):
+  try:
+      os.mkdir(filepath)
+      print("Directory is created")
+  except FileExistsError:
+    print("Directory exists")
+  pass
 
-try:
-    os.mkdir(dirName)
-    print("Directory: [",dirName,"] is created")
+class Orbit:
+    def __init__(self):
 
-except FileExistsError:
-    print("Directory: [",dirName,"] exists")
-    pass
+        #Relative Mass
+        self.Planet_mass = 1 #Default is one Earth mass
+        self.Sun_mass = 333000 
 
+        #Initial Position
+        self.Planet_init_pos_x = 1
+        self.Planet_init_pos_y = 0
+        self.Sun_init_pos_x = 0
+        self.Sun_init_pos_y = 0
 
-m1 = 1
-m2 = 333000
-x1_0 = 1
-x2_0 = 0
-y1_0 = 0
-y2_0 = 0
-vx1_0 = 0
-vy1_0 = np.sqrt(m2)
-vx2_0 = 0
-vy2_0 = 0
+        #Initial Velocities
+        self.Planet_init_vel_x = 0
+        self.Planet_init_vel_y = np.sqrt(self.Sun_mass)
+        self.Sun_init_vel_x = 0
+        self.Sun_init_vel_y = 0
 
-def dSdt(S, t):
-    x1, y1, x2, y2, vx1, vy1, vx2, vy2 = S
-    r12 = np.sqrt((x2-x1)**2 + (y2-y1)**2)
-    return [vx1, vy1, vx2, vy2, 
-    m2/r12**3 * (x2-x1),
-    m2/r12**3 * (y2-y1),
-    m1/r12**3 * (x1-x2),
-    m1/r12**3 * (y1-y2)]
+        #time granularity of simulation
+        self.time = np.linspace(0,1,10000)
 
-t = np.linspace(0,1,10000)
+        #solution array
 
-sol = odeint(dSdt, y0=[x1_0, y1_0, x2_0,y2_0, vx1_0, vy1_0, vx2_0, vy2_0],t=t)
+    def dSdt(self, S, t):
+        planet_x, planet_y, Sun_x, Sun_y, planet_vx, planet_vy,Sun_vx, Sun_vy = S
+        planet_Sun_dist = np.sqrt((Sun_x - planet_x)**2 + (Sun_y - planet_y)**2)
 
-plt.plot(sol.T[0])
-plt.xlim(0,200)
-plt.ylabel("Distance of Earth from the sun (AU)")
-plt.xlabel("Years")
-plt.title("Earth distance from the Sun against time.")
-plt.grid()
+        return [planet_vx, planet_vy,Sun_vx, Sun_vy,
+        self.Sun_mass/planet_Sun_dist**3 * (Sun_x - planet_x),
+        self.Sun_mass/planet_Sun_dist**3 * (Sun_y - planet_y),
+        self.Sun_mass/planet_Sun_dist**3 * (planet_x - Sun_x),
+        self.Sun_mass/planet_Sun_dist**3 * (planet_y - Sun_y)]
+
+    def solve_ODE(self):
+          sol = odeint(self.dSdt, y0=[self.Planet_init_pos_x, self.Planet_init_pos_y,
+          self.Sun_init_pos_x, self.Sun_init_pos_y,
+          self.Planet_init_vel_x, self.Planet_init_vel_y,
+          self.Sun_init_vel_x, self.Sun_init_vel_y],
+          t = self.time)
+
+          return 
+
+if __name__ == '__main__':
+      orbit = Orbit()
+      orbit.solve_ODE()
+
+      plt.plot(sol.T[0])
+      plt.xlim(0,200)
+      plt.ylabel("Distance of Planets from the Sun (AU)")
+      plt.xlabel("Years")
+      plt.title("Planetary distance from the Sun against time.")
+      plt.grid()
+      plt.show()
 # plt.savefig("/Users/daryltng/Documents/GitHub/3-body-problem/plots/Earth_from_sun.png")
