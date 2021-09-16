@@ -17,7 +17,6 @@ def plots(filepath):
 
 class Orbit:
     def __init__(self):
-
         #Relative Mass
         self.Planet_mass = 1 #Default is one Earth mass
         self.Sun_mass = 333000 
@@ -56,17 +55,15 @@ class Orbit:
           self.Sun_init_vel_x, self.Sun_init_vel_y],
           t = self.time)
 
-          return 
+          plt.plot(sol.T[0])
+          plt.xlim(0,200)
+          plt.ylabel("Distance of Planets from the Sun (AU)")
+          plt.xlabel("Years")
+          plt.title("Planetary distance from the Sun against time.")
+          plt.grid()
+          plt.show()
+          # plt.savefig(".......")
 
 if __name__ == '__main__':
       orbit = Orbit()
       orbit.solve_ODE()
-
-      plt.plot(sol.T[0])
-      plt.xlim(0,200)
-      plt.ylabel("Distance of Planets from the Sun (AU)")
-      plt.xlabel("Years")
-      plt.title("Planetary distance from the Sun against time.")
-      plt.grid()
-      plt.show()
-# plt.savefig("/Users/daryltng/Documents/GitHub/3-body-problem/plots/Earth_from_sun.png")
