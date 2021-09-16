@@ -6,15 +6,6 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.animation import PillowWriter
 import os
 
-#temp folder to store plots
-def plots(filepath):
-  try:
-      os.mkdir(filepath)
-      print("Directory is created")
-  except FileExistsError:
-    print("Directory exists")
-  pass
-
 class Orbit:
     def __init__(self):
           
@@ -99,22 +90,32 @@ class Orbit:
                       [self.Planet_pos_y[i], self.Sun_pos_y[i]]
                 )
 
-                text.set_text('Time = {:.2f} Years', format(i*time))
+                text.set_text('Time = {:.2f} Years'.format(i*time))
 
           fig, ax = plt.subplots(1, 1, figsize=(8,8))
           ax.grid()
           ln1, = plt.plot([],[], "ro--", lw=3, markersize=8)
-          text = plt.text(0.7, 0.7, '')
+          text = plt.text(0.7, 0.7,'')
           ax.set_ylim(-5, 5)
           ax.set_xlim(-5, 5)
           ani = animation.FuncAnimation(fig, animate, frames=200, interval=50)
           ani.save("orbit_trajectory.gif", writer="pillow", fps=30)
+          plt.show()
 
+    #temp folder to store plots
+    def plot_folder(self, filepath):
+          try:
+                os.mkdir(filepath)
+                print("Directory is created")
+                
+          except FileExistsError:
+                print("Directory exists")
+                pass
 
-          pass
 
 if __name__ == '__main__':
       orbit = Orbit()
+      orbit.plot_folder("...........")
       orbit.solve_ODE()
       orbit.plot_orbit()
       # orbit.plot_radius()
