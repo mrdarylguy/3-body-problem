@@ -60,14 +60,14 @@ class Orbit:
 
           return sol
 
-    def plot_radius(self):
+    def plot_x_pos(self):
 
           plt.plot(self.solve_ODE().T[0])
           plt.xlim(0, 200)
-          plt.ylim(0.2, 1.1)
-          plt.ylabel("Orbital Radius/Aphelion", fontsize=14)
-          plt.xlabel("Units of time", fontsize=14)
-          plt.title("Orbital radius against time", fontsize=16)
+          plt.ylim(-1.1, 1.1)
+          plt.ylabel("X-coordinate of planet", fontsize=12)
+          plt.xlabel("Units of time", fontsize=12)
+          plt.title("X coordinate against time", fontsize=16)
           plt.axhline(y=1.0, color="red", linestyle='--')
           plt.axhline(y=min(self.solve_ODE().T[0]), color='red', linestyle="--") 
           plt.grid()
@@ -119,6 +119,6 @@ if __name__ == '__main__':
       orbit = Orbit()
       # orbit.plot_folder("...........")
       orbit.solve_ODE()
-      # orbit.plot_radius()
-      orbit.plot_orbit()
+      orbit.plot_x_pos()
+      # orbit.plot_orbit()
       
