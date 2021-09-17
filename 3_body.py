@@ -10,13 +10,16 @@ class Orbit:
     def __init__(self):
           
         #Actual quantities
+        self.Sun_actual_mass = 1.99e30
         self.Earth_actual_mass = 5.97e24
+        self.Planet_actual_mass = None
         self.Astronomical_unit = 1.5e11
         self.Universal_grav_constant = 6.67e-11
 
-        #Relative Mass
+        #Relative quantities
         self.Planet_mass = 1 #Default is one Earth mass
-        self.Sun_mass = 333000 
+        self.Sun_mass = self.Sun_actual_mass / self.Earth_actual_mass # = 333000
+        self.dist_from_sun = 1
 
         #Initial Positions
         self.Planet_init_pos_x = 1 #Default is one Astronomical Unit
@@ -32,12 +35,51 @@ class Orbit:
 
         #Initial Velocities
         self.Planet_init_vel_x = 0
-        self.Planet_init_vel_y = np.sqrt(self.Sun_mass)
+        self.Planet_init_vel_y = np.sqrt(self.Sun_mass/self.dist_from_sun)
         self.Sun_init_vel_x = 0
         self.Sun_init_vel_y = 0
 
         #time granularity of simulation
         self.time = np.linspace(0,1,10000)
+
+        self.planet_data_dict = { 
+              "Saturn": {
+                    "actual_mass": 5.683e26,
+                    "dist_from_sun": 9.40, #distance in AU
+                    "init_pos_x": 0,
+                    "init_pos_y": 0,
+                    "init_vel_x": 0,
+                    "init_vel_y": 0
+              },
+            
+               "Jupiter": {
+                     "actual_mass": 1.898e27,
+                     "dist_from_sun": 5.20,
+                     "init_pos_x": 0,
+                     "init_pos_y": 0,
+                     "init_vel_x": 0,
+                     "init_vel_y": 0
+            }}
+            
+
+    def get_planet_data(self, key):
+
+          #Actual quantites
+          self.Planet_actual_mass = self.planet_data_dict["actual_mass"]
+          self.Planet_dist_from_sun = self.planet_data_dict["dist_from_sun"]
+
+          #relative quantities
+          self.Planet_mass = self.Planet_actual_mass/ self.Earth_actual_mass
+          self.dist_from_sun = self.Planet_actual_dist_from_sun / self.Astronomical_unit
+
+          self.Planet_init_pos_x = self.planet_data_dict["init_pos_x"]
+          self.Planet_init_pos_y = self.planet_data_dict["init_pos_y"]
+
+          self.Planet_init_vel_x = self.planet_data_dict["init_vel_x"]
+          self.Planet_init_vel_y = self.planet_data_dict["init_vel_y"]
+
+
+          pass
 
     def dSdt(self, S, t):
         planet_x, planet_y, Sun_x, Sun_y, planet_vx, planet_vy,Sun_vx, Sun_vy = S
@@ -115,9 +157,12 @@ class Orbit:
                 pass
 
 
+
 if __name__ == '__main__':
       orbit = Orbit()
       # orbit.plot_folder("...........")
+
+
       orbit.solve_ODE()
       orbit.plot_x_pos()
       # orbit.plot_orbit()
