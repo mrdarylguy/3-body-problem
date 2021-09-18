@@ -1,1 +1,1 @@
-orbit.plot_radius()
+ani.save("orbit_trajectory.gif", writer=pillow(fps=20))

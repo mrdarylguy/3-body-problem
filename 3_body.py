@@ -18,11 +18,11 @@ class Orbit:
 
         #Relative quantities
         self.Planet_mass = 1 #Default is one Earth mass
-        self.Sun_mass = self.Sun_actual_mass / self.Earth_actual_mass # = 333000
-        self.dist_from_sun = 1
+        self.Sun_mass = self.Sun_actual_mass / self.Earth_actual_mass # mass = 333000
+        self.dist_from_sun = 1 #Default is 1 astronomical unit
 
         #Initial Positions
-        self.Planet_init_pos_x = 1 #Default is one Astronomical Unit
+        self.Planet_init_pos_x = 1 
         self.Planet_init_pos_y = 0
         self.Sun_init_pos_x = 0
         self.Sun_init_pos_y = 0
@@ -42,41 +42,39 @@ class Orbit:
         #time granularity of simulation
         self.time = np.linspace(0,1,10000)
 
+        #dict of planetary data to feed the simulation
         self.planet_data_dict = { 
               "Saturn": {
                     "actual_mass": 5.683e26,
                     "dist_from_sun": 9.40, #distance in AU
                     "init_pos_x": 0,
-                    "init_pos_y": 0,
-                    "init_vel_x": 0,
+                    "init_pos_y": 1,
+                    "init_vel_x": -np.sqrt(self.Sun_mass / self.planet_data_dict["Saturn"]["dist_from_sun"]),
                     "init_vel_y": 0
               },
             
                "Jupiter": {
                      "actual_mass": 1.898e27,
-                     "dist_from_sun": 5.20,
-                     "init_pos_x": 0,
-                     "init_pos_y": 0,
+                     "dist_from_sun": 5.20, #distance in AU
+                     "init_pos_x": 0.707,
+                     "init_pos_y": 0.707,
                      "init_vel_x": 0,
-                     "init_vel_y": 0
+                     "init_vel_y": np.sqrt(self.Sun_mass / self.planet_data_dict["Jupiter"]["dist_from_sun"])
             }}
             
-
     def get_planet_data(self, key):
-
           #Actual quantites
-          self.Planet_actual_mass = self.planet_data_dict["actual_mass"]
-          self.Planet_dist_from_sun = self.planet_data_dict["dist_from_sun"]
+          self.Planet_actual_mass = self.planet_data_dict[key]["actual_mass"]
 
           #relative quantities
-          self.Planet_mass = self.Planet_actual_mass/ self.Earth_actual_mass
-          self.dist_from_sun = self.Planet_actual_dist_from_sun / self.Astronomical_unit
+          self.Planet_mass = self.Planet_actual_mass/ self.Earth_actual_mass #gets the relative mass of the planet
+          self.dist_from_sun = self.planet_data_dict[key]["dist_from_sun"]
 
-          self.Planet_init_pos_x = self.planet_data_dict["init_pos_x"]
-          self.Planet_init_pos_y = self.planet_data_dict["init_pos_y"]
+          self.Planet_init_pos_x = self.planet_data_dict[key]["init_pos_x"]
+          self.Planet_init_pos_y = self.planet_data_dict[key]["init_pos_y"]
 
-          self.Planet_init_vel_x = self.planet_data_dict["init_vel_x"]
-          self.Planet_init_vel_y = self.planet_data_dict["init_vel_y"]
+          self.Planet_init_vel_x = self.planet_data_dict[key]["init_vel_x"]
+          self.Planet_init_vel_y = self.planet_data_dict[key]["init_vel_y"]
 
 
           pass
@@ -105,20 +103,18 @@ class Orbit:
     def plot_x_pos(self):
 
           plt.plot(self.solve_ODE().T[0])
-          plt.xlim(0, 200)
+          plt.xlim(0, 800)
           plt.ylim(-1.1, 1.1)
           plt.ylabel("X-coordinate of planet", fontsize=12)
           plt.xlabel("Units of time", fontsize=12)
           plt.title("X coordinate against time", fontsize=16)
-          plt.axhline(y=1.0, color="red", linestyle='--')
-          plt.axhline(y=min(self.solve_ODE().T[0]), color='red', linestyle="--") 
           plt.grid()
           plt.show()
           # plt.savefig(".......")
 
-    def plot_orbit(self):
+    def plot_orbit(self, key):
           
-          time = 1/np.sqrt(self.Universal_grav_constant * self.Earth_actual_mass / (self.Astronomical_unit)**3) #obtain number of seconds
+          time = 1/np.sqrt(self.Universal_grav_constant * self.Planet_actual_mass / (self.Astronomical_unit)**3) #obtain number of seconds
           time = time / (60*60*24*365.25) * np.diff(self.time)[0] #convert seconds into years
 
           #Array of positions
@@ -143,7 +139,7 @@ class Orbit:
           ax.set_xlim(-5, 5)
           ani = animation.FuncAnimation(fig, animate, frames=200, interval=50)
           ani.save("orbit_trajectory.gif", writer="pillow", fps=30)
-          plt.show()
+      #     plt.show()
       #     plt.savefig("..........")
 
     #temp folder to store plots
@@ -157,13 +153,14 @@ class Orbit:
                 pass
 
 
-
 if __name__ == '__main__':
       orbit = Orbit()
       # orbit.plot_folder("...........")
 
+      for key in orbit.planet_data_dict:
+            orbit.get_planet_data(key)
+            orbit.solve_ODE()
+            orbit.plot_orbit()
 
-      orbit.solve_ODE()
-      orbit.plot_x_pos()
-      # orbit.plot_orbit()
+
       
