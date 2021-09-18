@@ -1,1 +1,1 @@
-ani.save("orbit_trajectory.gif", writer=pillow(fps=20))
+ani.save("Earth_mars_trajectory.gif", writer=pillow(fps=20))
