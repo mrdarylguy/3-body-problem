@@ -7,6 +7,6 @@ I am practicing my python by converting them into full python files with inputs 
 
 There are currently (18/9/2021) 2 active versions.
 
-- 3_body_no_input.py which is a rudimentary version, with variables hardcoded, and all equations fed to the solver. 
+- 3_body_no_input.py which is a rudimentary version, with variables hardcoded, and all equations fed to the solver for 1 single run. 
 
-- 3_body.py which is a more generalised version that reads planetary input data from a given dictionary, and runs the solver for each planet's orbit around the sun.
+- 3_body.py which is a more generalised version that extracts planetary input data from a given dictionary, and runs the solver for each planet's orbit around the sun.
