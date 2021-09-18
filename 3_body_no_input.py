@@ -78,7 +78,7 @@ class Orbit:
                 self.Sun_init_vel_x, self.Sun_init_vel_y,
                 self.Mars_init_vel_x, self.Mars_init_vel_y
                 ],
-                method = 'RK45', t_eval=self.time)
+                method = 'RK23', t_eval=self.time)
 
         return sol
 
@@ -96,7 +96,7 @@ class Orbit:
 
     def plot_orbit(self):
           
-          time = 1/np.sqrt(self.Universal_grav_constant * self.Earth_actual_mass / (self.Astronomical_unit)**3) #obtain number of seconds
+          time = 1/np.sqrt(self.Universal_grav_constant * self.Mars_actual_mass / (self.Astronomical_unit)**3) #obtain number of seconds
           time = time / (60*60*24*365.25) * np.diff(self.time)[0] #convert seconds into years
 
           #Array of positions
@@ -114,7 +114,7 @@ class Orbit:
                       [self.Earth_pos_y[i], self.Sun_pos_y[i], self.Mars_pos_y[i]]
                       )
 
-                text.set_text('Time = {:.2f} Years'.format(i*time))
+                text.set_text('Time = {:.1f} Years'.format(i*time))
 
           fig, ax = plt.subplots(1, 1, figsize=(8,8))
           ax.grid()
@@ -123,7 +123,7 @@ class Orbit:
           ax.set_ylim(-2, 2)
           ax.set_xlim(-2, 2)
           ani = animation.FuncAnimation(fig, animate, frames=1000, interval=50)
-      #     ani.save("Earth_mars_trajectory.gif", writer=pillow(fps=20))
+          ani.save("Earth_mars_trajectory.gif", writer=pillow(fps=20))
           plt.show()
       #     plt.savefig("..........")
 
