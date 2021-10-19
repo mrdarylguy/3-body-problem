@@ -1,0 +1,27 @@
+{
+    "Sun":{
+        "actual_mass": 1.99e30
+
+    },
+    "Earth":{
+        "actual_mass": 5.97e24
+
+    },
+
+    "Saturn": {
+        "actual_mass": 5.683e26,
+        "dist_from_sun": 9.40,
+        "init_pos_x": 0,
+        "init_pos_y": 1,
+        "init_vel_x": 0,
+        "init_vel_y": 0
+    },
+    "Jupiter": {
+        "actual_mass": 1.898e27,
+        "dist_from_sun": 5.20, 
+        "init_pos_x": 0.707,
+        "init_pos_y": 0.707,
+        "init_vel_x": 0,
+        "init_vel_y": 0
+    }
+}
