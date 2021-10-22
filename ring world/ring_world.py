@@ -33,10 +33,10 @@ class Halo:
     #Function to calculate the orbital period 
     def calculateOrbitalPeriod(self):
         radius = self.diameter / 2
-        period = np.sqrt(self.gravity / radius)
+        period = np.sqrt(self.gravity * 9.81 / radius)
         return period
 
-    def extractRingData(self, rings_to_study):
+    def extractRingData(self, rings_to_study, ring_info):
         for ring in rings_to_study:
             if ring in ring_data:
                 halo = Halo(number=ring["number"], 
@@ -48,9 +48,22 @@ class Halo:
                             max_temp=ring["max_temp"],
                             attached_AI=ring["attached_AI"])
 
-        #Calcultate the orbital period if it is not given
+                #Calcultate the orbital period if it is not given
                 if halo.orbital_period == None:
                     halo.orbital_period == self.calculateOrbitalPeriod
+
+            ring_info.append(halo)
+
+    def habitability(self, ring_info):
+        for halo in ring_info:
+            if halo.min_temp > -20 and halo.max_temp < 45:
+                if halo.gravity > 0.8:
+                    halo.habitability = "Habitable"
+                    
+            else:
+                halo.habitability = "Uninhabitable"
+
+
 
 
 rings_to_study = [] 
