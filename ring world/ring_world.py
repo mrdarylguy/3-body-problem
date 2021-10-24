@@ -63,9 +63,9 @@ class Halo:
             else:
                 halo.habitability = "Uninhabitable"
 
+        pass
 
-
-
-rings_to_study = [] 
-ring_info = []
-    
+if __name__ == "__main__":
+    rings_to_study = ["04"] 
+    ring_info = []
+    print(ring_info)
