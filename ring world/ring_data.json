@@ -3,7 +3,7 @@
         "number": "04",
         "diameter": 10e6, 
         "width": 318e6,
-        "orbital_period": None,
+        "orbital_period": null,
         "gravity": 0.992,
         "min_temp": -23,
         "max_temp": 40,
@@ -14,7 +14,7 @@
         "number": "05", 
         "diameter": 10e6,
         "width": 318e6,
-        "orbital_period": None,
+        "orbital_period": null,
         "gravity": 1.04,
         "min_temp": -19,
         "max_temp": 42,
@@ -25,22 +25,22 @@
         "number": "09", 
         "diameter": 10e6,
         "width": 318e6,
-        "orbital_period": None,
+        "orbital_period": null,
         "gravity": 0.992,
         "min_temp": -23,
         "max_temp": 40,
-        "attached_AI": None
+        "attached_AI": null
     },
 
     "08": {
         "number": "08", 
         "diameter": 10e6,
         "width": 318e6,
-        "orbital_period": None,
+        "orbital_period": null,
         "gravity": 0.992,
         "min_temp": -23,
         "max_temp": 40,
-        "attached_AI": None
+        "attached_AI": null
     }
 
 }

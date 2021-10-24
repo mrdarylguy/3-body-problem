@@ -7,7 +7,8 @@ if the particular Halo is habitable.
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import ring_data
+import json
+
 
 class Halo:
     def __init__(self,
@@ -29,7 +30,7 @@ class Halo:
         self.min_temp = min_temp
         self.max_temp = max_temp
         self.attached_AI = attached_AI
-
+    
     #Function to calculate the orbital period 
     def calculateOrbitalPeriod(self):
         radius = self.diameter / 2
@@ -37,6 +38,11 @@ class Halo:
         return period
 
     def extractRingData(self, rings_to_study, ring_info):
+
+        ring_data = open("ring_data.json")
+        ring_data = json.load(ring_data)
+
+
         for ring in rings_to_study:
             if ring in ring_data:
                 halo = Halo(number=ring["number"], 
@@ -66,6 +72,15 @@ class Halo:
         pass
 
 if __name__ == "__main__":
-    rings_to_study = ["04"] 
-    ring_info = []
-    print(ring_info)
+
+    # rings_to_study = ["04"]
+    # ring_info = []
+ 
+    # _Halo = Halo()
+    # _Halo.extractRingData(rings_to_study,
+    #                       ring_info)
+
+    # print(ring_info)
+
+    pass
+
