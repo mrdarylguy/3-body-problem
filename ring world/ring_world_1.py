@@ -6,7 +6,6 @@ if the particular Halo is habitable.
 
 import numpy as np
 import matplotlib.pyplot as plt
-from numpy.lib.shape_base import _put_along_axis_dispatcher
 import pandas as pd
 import json
 
@@ -60,6 +59,8 @@ def extractRingData(rings_to_study, ring_data, ring_info):
 
             ring_info.append(halo)
 
+    print(ring_info)
+
 
 ring_data = open("ring_data.json")
 ring_data = json.load(ring_data)
@@ -67,5 +68,6 @@ ring_data = json.load(ring_data)
 rings_to_study = ["04"]
 ring_info = []
 
-# extractRingData(rings_to_study, ring_data, ring_info)
+extractRingData(rings_to_study, ring_data, ring_info)
+
 
