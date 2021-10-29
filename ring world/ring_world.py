@@ -37,7 +37,18 @@ class Halo:
         period = np.sqrt(self.gravity * 9.81 / radius)
         return period
 
-    def extractRingData(self, rings_to_study, ring_info):
+    def habitability(self, ring_info):
+        for halo in ring_info:
+            if halo.min_temp > -20 and halo.max_temp < 45:
+                if halo.gravity > 0.8:
+                    halo.habitability = "Habitable"
+                    
+            else:
+                halo.habitability = "Uninhabitable"
+
+        pass
+
+def extractRingData(self, rings_to_study, ring_info):
 
         for ring in rings_to_study:
             if ring in ring_data:
@@ -50,22 +61,7 @@ class Halo:
                             max_temp=ring["max_temp"],
                             attached_AI=ring["attached_AI"])
 
-                #Calcultate the orbital period if it is not given
-                if halo.orbital_period == None:
-                    halo.orbital_period == self.calculateOrbitalPeriod
-
                 ring_info.append(halo)
-
-    def habitability(self, ring_info):
-        for halo in ring_info:
-            if halo.min_temp > -20 and halo.max_temp < 45:
-                if halo.gravity > 0.8:
-                    halo.habitability = "Habitable"
-                    
-            else:
-                halo.habitability = "Uninhabitable"
-
-        pass
 
 ring_data = open("ring_data.json")
 ring_data = json.load(ring_data) 
@@ -73,3 +69,5 @@ ring_data = json.load(ring_data)
 rings_to_study = ["04"]
 ring_info = []
 
+extractRingData(rings_to_study, ring_info)
+print(ring_info)
