@@ -1,3 +1,9 @@
+"""
+This is a script to extract astrophysical data and recommend 
+if the particular Halo is habitable.
+
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 from numpy.lib.shape_base import _put_along_axis_dispatcher
@@ -40,14 +46,14 @@ def extractRingData(rings_to_study, ring_data, ring_info):
 
     for ring in rings_to_study:
         if ring in ring_data:
-            halo = Halo(number=ring["number"],
-                        diameter=ring["diamter"],
-                        width=ring["width"],
-                        orbital_period=ring["orbital_period"],
-                        gravity=ring["gravity"],
-                        min_temp=ring["min_temp"],
-                        max_temp=ring["max_temp"],
-                        attached_AI=ring["attached_AI"])
+            halo = Halo(number=ring_data[ring]["number"],
+                        diameter=ring_data[ring]["diameter"],
+                        width=ring_data[ring]["width"],
+                        orbital_period=ring_data[ring]["orbital_period"],
+                        gravity=ring_data[ring]["gravity"],
+                        min_temp=ring_data[ring]["min_temp"],
+                        max_temp=ring_data[ring]["max_temp"],
+                        attached_AI=ring_data[ring]["attached_AI"])
 
             calculateOrbitalPeriod(halo)
 
@@ -55,4 +61,11 @@ def extractRingData(rings_to_study, ring_data, ring_info):
             ring_info.append(halo)
 
 
-    pass
+ring_data = open("ring_data.json")
+ring_data = json.load(ring_data)
+
+rings_to_study = ["04"]
+ring_info = []
+
+# extractRingData(rings_to_study, ring_data, ring_info)
+
